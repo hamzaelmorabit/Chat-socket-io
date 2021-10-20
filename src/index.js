@@ -17,11 +17,17 @@ app.get("/about", (req, res) => {
 
 let count = 0;
 io.on("connection", (socket) => {
-  socket.on("getcount", () => {
-    count++;
-    socket.emit("updatecount", count);
-    // console.log("New web socket io" + count);
+  socket.on("sendMessage", (message) => {
+    io.emit("defuse_message", message);
   });
+
+  /*   socket.emit("message", "Welcome"); */
+
+  /*  socket.on("getcount", () => {
+    count++;
+    io.emit("updatecount", count); //socket.on   sending for one user   socket.on("getcount", () => {
+    // console.log("New web socket io" + count);
+  }); */
 });
 
 server.listen(port, () => {

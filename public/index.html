@@ -55,7 +55,7 @@
                 padding: 0.5rem 1rem;
             }
 
-            #messages>li:nth-child(odd) {
+            #messages>li:nth-child(even) {
                 background: #efefef;
             }
 
@@ -67,9 +67,13 @@
             <button>Count</button>
             <p>Count</p>
         </div>
-        <ul id="messages"></ul>
-        <form id="form" action="">
-            <input id="input" autocomplete="off" /><button>Send</button>
+        <ul id="messages">
+            <li>know</li>
+            <li>know2</li>
+        </ul>
+        <form id="form">
+            <input id="input" autocomplete="off" />
+            <button id="btn-send">Send</button>
         </form>
         <script src="/socket.io/socket.io.js"></script>
         <script src="./js/chat.js">
