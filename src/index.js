@@ -17,8 +17,24 @@ app.get("/about", (req, res) => {
 
 let count = 0;
 io.on("connection", (socket) => {
+  socket.emit("message", "Welcome!");
+
+  socket.broadcast.emit("message", "A new user has joined!");
+
   socket.on("sendMessage", (message) => {
-    io.emit("defuse_message", message);
+    io.emit("message", message, "sendMessage");
+  });
+
+  socket.on("sendLocation", (data, callback) => {
+    io.emit(
+      "messageLocation",
+      `https://google.com/maps?q=${data.latitude},${data.longitude}`
+    );
+    callback("Ok!");
+  });
+
+  socket.on("disconnect", (socket) => {
+    io.emit("message", "A user has left!");
   });
 
   /*   socket.emit("message", "Welcome"); */

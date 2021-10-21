@@ -1,23 +1,53 @@
 const socket = io();
+const $formMessage = document.querySelector("#form");
+const ul_messages = document.querySelector("#messages");
+const $sendInput = document.querySelector("#input");
+const $sendButton = document.querySelector("#btn-send");
+const $formButtonlocation = document.querySelector("#btn-location");
 
+const $messages_ = document.querySelector("#messages_");
+
+const locationTemplate = document.querySelector("#location-template").innerHTML;
+
+const messageTemplate = document.querySelector("#message-template").innerHTML;
 /* socket.on("message", (data) => {
   console.log(data);
 }); */
 
-socket.on("defuse_message", (data) => {
-  add_child(data);
+socket.on("message", (data, type) => {
+  // console.log(data, "=> message");
+
+  $sendButton.removeAttribute("disabled");
+  $sendButton.style.backgroundColor = "black";
+  $sendInput.focus();
+  $sendInput.value = "";
+
+  const html = Mustache.render(messageTemplate, {
+    message: data,
+  });
+  $messages_.insertAdjacentHTML("beforeend", html);
+
+  // if (type === "sendMessage") add_child(data);
 });
 
-const btn_send = document.querySelector("#form");
-const ul_messages = document.getElementById("messages");
-const input_send = document.querySelector("#input");
+socket.on("messageLocation", (url) => {
+  console.log(url); ;
 
-btn_send.addEventListener("submit", (e) => {
+  const html = Mustache.render(locationTemplate, {
+    url: url,
+  });
+  $messages_.insertAdjacentHTML("beforeend", html);
+});
+
+$formMessage.addEventListener("submit", (e) => {
   e.preventDefault();
 
-  if (!input_send.value) return;
+  if (!$sendInput.value) return;
 
-  socket.emit("sendMessage", input_send.value);
+  $sendButton.setAttribute("disabled", "disabled");
+  $sendButton.style.backgroundColor = "#ccc";
+
+  socket.emit("sendMessage", $sendInput.value);
 });
 
 let player = true;
@@ -25,11 +55,35 @@ const add_child = (message) => {
   const node = document.createElement("LI");
   const textnode = document.createTextNode(message);
   node.appendChild(textnode);
-  player ? (node.style.textAlign = "left") : (node.style.textAlign = "right");
-  player = !player;
+  // player ? (node.style.textAlign = "left") : (node.style.textAlign = "right");
+  // player = !player;
   ul_messages.appendChild(node);
-  input_send.value = "";
 };
+
+const sendLocation = (ev) => {
+  ev.preventDefault();
+  if (!navigator.geolocation) return alert("Geolocation not supported");
+
+  $formButtonlocation.setAttribute("disabled", "disabled");
+  $formButtonlocation.style.backgroundColor = "#ccc";
+
+  navigator.geolocation.getCurrentPosition((position) => {
+    const myLocation = {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
+    };
+
+    socket.emit("sendLocation", myLocation, (message) => {
+      $formButtonlocation.removeAttribute("disabled");
+      $formButtonlocation.style.backgroundColor = "black";
+
+      console.log(`location shared ${message}`);
+    });
+  });
+};
+
+$formButtonlocation.addEventListener("click", (e) => sendLocation(e));
+
 /* const btn_target = document.querySelector(".btn-test");
 
 const btn_target_handler = () => {
