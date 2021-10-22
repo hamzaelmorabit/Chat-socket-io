@@ -4,6 +4,8 @@ const path = require("path");
 const http = require("http");
 const socketio = require("socket.io");
 
+const { generateLocation } = require("./utils/generateLocation");
+
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
@@ -17,6 +19,8 @@ app.get("/about", (req, res) => {
 
 let count = 0;
 io.on("connection", (socket) => {
+  console.log("now in connection with web socket");
+
   socket.emit("message", "Welcome!");
 
   socket.broadcast.emit("message", "A new user has joined!");
@@ -28,7 +32,9 @@ io.on("connection", (socket) => {
   socket.on("sendLocation", (data, callback) => {
     io.emit(
       "messageLocation",
-      `https://google.com/maps?q=${data.latitude},${data.longitude}`
+      generateLocation(
+        `https://google.com/maps?q=${data.latitude},${data.longitude}`
+      )
     );
     callback("Ok!");
   });

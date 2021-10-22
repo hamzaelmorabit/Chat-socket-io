@@ -30,11 +30,12 @@ socket.on("message", (data, type) => {
   // if (type === "sendMessage") add_child(data);
 });
 
-socket.on("messageLocation", (url) => {
-  console.log(url); ;
+socket.on("messageLocation", ({ url, createdAt }) => {
+  console.log(url);
 
   const html = Mustache.render(locationTemplate, {
-    url: url,
+    url,
+    createdAt: moment(createdAt).format("hh:mm a"),
   });
   $messages_.insertAdjacentHTML("beforeend", html);
 });

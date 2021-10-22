@@ -31,14 +31,15 @@
         </script>
         <script id="location-template" type="text/html">
                     <div>
-                      <p><a  target="_black" href="{{url}}">My current location</a></p>
+                      <p>&nbsp;&nbsp;&nbsp;<span>{{createdAt}}</span> - &nbsp;<span><a  target="_black" href="{{url}}">My current location</a></span>
+                    </p>
                     </div>
                 </script>
         <script src="/socket.io/socket.io.js"></script>
         <script src="./js/chat.js">
         </script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
-
+        <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js" type="text/javascript"></script>
     </body>
 
 </html>
