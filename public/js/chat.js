@@ -1,21 +1,29 @@
 const socket = io();
-const $formMessage = document.querySelector("#form");
+const $formMessage = document.querySelector("#message-form");
 const ul_messages = document.querySelector("#messages");
-const $sendInput = document.querySelector("#input");
-const $sendButton = document.querySelector("#btn-send");
-const $formButtonlocation = document.querySelector("#btn-location");
+const $sendInput = document.querySelector("input");
+// const $sendButton = document.querySelector("#btn-send");
+const $sendButton = $formMessage.querySelector("button");
 
-const $messages_ = document.querySelector("#messages_");
+const $formButtonlocation = document.querySelector("#send-location");
 
-const locationTemplate = document.querySelector("#location-template").innerHTML;
+const $messages = document.querySelector("#messages");
 
+const locationMessageTemplate = document.querySelector(
+  "#location-message-template"
+).innerHTML;
 const messageTemplate = document.querySelector("#message-template").innerHTML;
 /* socket.on("message", (data) => {
   console.log(data);
 }); */
 
+const { username, room } = Qs.parse(location.search, {
+  ignoreQueryPrefix: true,
+});
+socket.emit("join", { username, room });
+
 socket.on("message", (data, type) => {
-  // console.log(data, "=> message");
+  console.log(data, "=> message");
 
   $sendButton.removeAttribute("disabled");
   $sendButton.style.backgroundColor = "black";
@@ -24,20 +32,20 @@ socket.on("message", (data, type) => {
 
   const html = Mustache.render(messageTemplate, {
     message: data,
+    createdAt: moment(new Date(new Date().getTime())).format("hh:mm a"),
   });
-  $messages_.insertAdjacentHTML("beforeend", html);
+  $messages.insertAdjacentHTML("beforeend", html);
 
   // if (type === "sendMessage") add_child(data);
 });
 
-socket.on("messageLocation", ({ url, createdAt }) => {
-  console.log(url);
-
-  const html = Mustache.render(locationTemplate, {
-    url,
-    createdAt: moment(createdAt).format("hh:mm a"),
+socket.on("messageLocation", (message) => {
+  console.log(message);
+  const html = Mustache.render(locationMessageTemplate, {
+    url: message.url,
+    createdAt: moment(message.createdAt).format("h:mm a"),
   });
-  $messages_.insertAdjacentHTML("beforeend", html);
+  $messages.insertAdjacentHTML("beforeend", html);
 });
 
 $formMessage.addEventListener("submit", (e) => {

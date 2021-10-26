@@ -2,27 +2,62 @@
 <html>
 
     <head>
-        <link href="./styles/styles.css" type="text/css" rel="stylesheet">
-        <title>Socket.IO chat</title>
-        <style>
-
-        </style>
+        <title>Chat App</title>
+        <link rel="icon" href="/img/favicon.png">
+        <link rel="stylesheet" href="/css/styles.min.css">
     </head>
 
     <body>
-        <div id="messages_"></div>
-        <div class="btn-test">
-            <!-- <button>Count</button> -->
+        <div class="centered-form">
+            <div class="centered-form__box">
+                <h1>Join</h1>
+                <form action="/chat.html">
+                    <label>Display name</label>
+                    <input type="text" name="username" placeholder="Display name" required>
+                    <label>Room</label>
+                    <input type="text" name="room" placeholder="Room" required>
+                    <button>Join</button>
+                </form>
+            </div>
         </div>
-        <ul id="messages">
+    </body>
+
+</html>
+
+<!-- <!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Chat App</title>
+        <link rel='icon' href="./img/favicon.png">
+        <link rel='stylesheet' href="./css/styles.min.css">
+
+
+    </head>
+
+    <body>
+        <div class="chat-container">
+
+            <div class="chat__sidebar"></div>
+            <div class="chat__main">
+                <div id="messages"></div>
+
+                <form id="message-form">
+                    <input name="message" type="text" placeholder="Message" type="text"/>
+                    <button id="btn-send">Send</button>
+                    <button id="btn-location">Send Location</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- <div class="btn-test"> -->
+<!-- <button>Count</button> -->
+<!-- </div> -->
+<!-- <ul id="messages">
             <li>know</li>
             <li>know2</li>
-        </ul>
-        <form id="form">
-            <input id="input" autocomplete="off" />
-            <button id="btn-send">Send</button>
-            <button id="btn-location">Send Location</button>
-        </form>
+        </ul>  
+
         <script id="message-template" type="text/html">
             <div>
                 <p>{{ message }}</p>
@@ -43,3 +78,6 @@
     </body>
 
 </html>
+
+
+ -->

@@ -21,16 +21,29 @@ let count = 0;
 io.on("connection", (socket) => {
   console.log("now in connection with web socket");
 
-  socket.emit("message", "Welcome!");
+  // socket.emit("message", "Welcome!");
 
-  socket.broadcast.emit("message", "A new user has joined!");
+  // socket.broadcast.emit("message", "A new user has joined!");
+
+  socket.on("join", ({ room, username }) => {
+    socket.join(room);
+
+    socket.emit("message", `Welcome ${username}!`);
+
+    socket.broadcast
+      .to(room)
+      .emit("message", `${username} has joined the our room "${room}"`);
+
+    // console.log(message.room);
+    // console.log(message);
+  });
 
   socket.on("sendMessage", (message) => {
-    io.emit("message", message, "sendMessage");
+    io.to("room1").emit("message", message, "sendMessage");
   });
 
   socket.on("sendLocation", (data, callback) => {
-    io.emit(
+    io.to("room1").emit(
       "messageLocation",
       generateLocation(
         `https://google.com/maps?q=${data.latitude},${data.longitude}`
@@ -40,7 +53,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", (socket) => {
-    io.emit("message", "A user has left!");
+    io.to("room1").emit("message", "A user has left!");
   });
 
   /*   socket.emit("message", "Welcome"); */
