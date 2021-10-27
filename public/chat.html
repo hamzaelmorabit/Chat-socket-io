@@ -8,15 +8,26 @@
     </head>
 
     <body>
+                <p id="message-p" hidden="true"></p>
+
         <div class="chat">
-            <div class="chat__sidebar">
+            <div id="sidebar" class="chat__sidebar">
             </div>
             <div class="chat__main">
-                <div id="messages" class="chat__messages"></div>
+                <div id="messages" class="chat__messages">
+                    <a href="#message-p" id="scroll-up" style="display: inline;"><i class="fa fa-chevron-up"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="fas"
+                            data-icon="chevron-up" class="fa-chevron-up" role="img" viewBox="0 0 448 512">
+                            <path fill="currentColor"
+                                d="M240.971 130.524l194.343 194.343c9.373 9.373 9.373 24.569 0 33.941l-22.667 22.667c-9.357 9.357-24.522 9.375-33.901.04L224 227.495 69.255 381.516c-9.379 9.335-24.544 9.317-33.901-.04l-22.667-22.667c-9.373-9.373-9.373-24.569 0-33.941L207.03 130.525c9.372-9.373 24.568-9.373 33.941-.001z" />
+                        </svg>
+                    </a>
+
+                </div>
 
                 <div class="compose">
                     <form id="message-form">
-                        <input name="message" placeholder="Message">
+                        <input name="message" placeholder="Message" required autocomplete="off">
                         <button>Send</button>
                     </form>
                     <button id="send-location">Send location</button>
@@ -27,22 +38,34 @@
         <script id="message-template" type="text/html">
             <div class="message">
                 <p>
-                    <span class="message__name">Some User Name</span>
+                    <span class="message__name">{{username}}</span>
                     <span class="message__meta">{{createdAt}}</span>
                 </p>
-                <p>{{message}}</p>
+                  <p>{{message}}</p>
             </div>
         </script>
 
         <script id="location-message-template" type="text/html">
             <div class="message">
                 <p>
-                    <span class="message__name">Some User Name</span>
+                    <span class="message__name">{{username}}</span>
                     <span class="message__meta">{{createdAt}}</span>
                 </p>
                 <p><a href="{{url}}" target="_blank">My current location</a></p>
             </div>
         </script>
+
+        <script id="sidebar-template" type="text/html">
+            <h2 class="room-title">{{roomName}}</h2>
+            <h3 class="list-title">Users</h3>
+                        <ul class="users">
+                            {{#users}}
+                            <li>{{username}}</li>
+                            {{/users}}
+
+                        </ul>
+                        
+                </script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>

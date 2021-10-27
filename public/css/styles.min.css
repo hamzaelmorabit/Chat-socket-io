@@ -64,10 +64,11 @@ button:disabled {
 }
 
 .centered-form__box {
-    box-shadow: 0 0 17px 1px #1D1F26;
+    box-shadow: 0 0 17px 3px #1D1F26;
     background: #F7F7FA;
     padding: 24px;
-    width: 250px
+    width: 350px;
+    border-radius: 3px;
 }
 
 .centered-form button {
@@ -100,6 +101,7 @@ button:disabled {
 
 .chat__messages {
     flex-grow: 1;
+    /* background: red; */
     padding: 24px 24px 0;
     overflow-y: scroll
 }
@@ -144,15 +146,40 @@ button:disabled {
     flex-grow: 1
 }
 
+/* button {
+    cursor: pointer;
+    padding: 12px;
+    background: #7C5CBF;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    transition: background .3s ease
+} */
+
+.compose button:disabled {
+    cursor: default;
+    background: #7c5cbf94
+}
+
 .compose button {
-    font-size: 14px
+    background: #7C5CBF;
+    font-size: 14px;
+    transition: all 0.2s ease-in-out;
+    border-radius: 4px;
+}
+
+.compose button:hover {
+    background: #6b47b8;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 17px rgba(0, 0, 0, 0.35);
 }
 
 .room-title {
     font-weight: 400;
     font-size: 22px;
     background: #2c2f3a;
-    padding: 24px
+    padding: 24px;
+    text-align: center
 }
 
 .list-title {
@@ -166,4 +193,29 @@ button:disabled {
     list-style-type: none;
     font-weight: 300;
     padding: 12px 24px 0
+}
+
+.users li {
+    padding-top: 12px
+}
+
+/* .fa-chevron-up {
+    font-size: 1px;
+    color: rgb(84, 39, 134);
+    width: 22px;
+} */
+
+.fa-chevron-up:hover {
+    opacity: 1;
+    filter: alpha(opacity=100);
+}
+
+.fa-chevron-up {
+    bottom: 90px;
+    position: fixed;
+    right: 50px;
+    /* display: none; */
+    width: 22px;
+    opacity: .5;
+    /* filter: alpha(opacity=50); */
 }

@@ -8,11 +8,14 @@ const $sendButton = $formMessage.querySelector("button");
 const $formButtonlocation = document.querySelector("#send-location");
 
 const $messages = document.querySelector("#messages");
+const $sidebar = document.querySelector("#sidebar");
 
 const locationMessageTemplate = document.querySelector(
   "#location-message-template"
 ).innerHTML;
 const messageTemplate = document.querySelector("#message-template").innerHTML;
+const usersTemplate = document.querySelector("#sidebar-template").innerHTML;
+
 /* socket.on("message", (data) => {
   console.log(data);
 }); */
@@ -20,44 +23,80 @@ const messageTemplate = document.querySelector("#message-template").innerHTML;
 const { username, room } = Qs.parse(location.search, {
   ignoreQueryPrefix: true,
 });
-socket.emit("join", { username, room });
+socket.emit("join", { username, room }, (error) => {
+  if (error) {
+    alert(error);
+    location.href = "/";
+  }
+});
+socket.on("roomData", ({ roomName, users }) => {
+  console.log(users);
+  console.log(roomName);
 
-socket.on("message", (data, type) => {
-  console.log(data, "=> message");
+  const html = Mustache.render(usersTemplate, {
+    users,
+    roomName: roomName,
+  });
+  $sidebar.innerHTML = html;
+});
 
+socket.on("message", ({ message, user }, type) => {
   $sendButton.removeAttribute("disabled");
-  $sendButton.style.backgroundColor = "black";
+  $sendButton.style.backgroundColor = "#7C5CBF";
+
   $sendInput.focus();
   $sendInput.value = "";
 
   const html = Mustache.render(messageTemplate, {
-    message: data,
+    message: message,
+    username: user.username,
     createdAt: moment(new Date(new Date().getTime())).format("hh:mm a"),
   });
   $messages.insertAdjacentHTML("beforeend", html);
-
+  autoScroll();
   // if (type === "sendMessage") add_child(data);
 });
 
+const autoScroll = () => {
+  const $newMessage = $messages.lastElementChild;
+
+  const newMessageStyle = getComputedStyle($newMessage);
+  const newMessageMargin = parseInt(newMessageStyle.marginBottom);
+  const newMessageHeight = newMessageMargin + $messages.offsetHeight;
+
+  // visibleHeight ,newMessageHeight; are fix values
+  const visibleHeight = $messages.offsetHeight;
+
+  const containerHeight = $messages.scrollHeight;
+
+  const scrollOfsset = visibleHeight + $messages.scrollTop;
+  console.log($messages.scrollTop, "$messages.scrollTop");
+  if (containerHeight - newMessageHeight <= scrollOfsset)
+    $messages.scrollTop = containerHeight;
+  // console.log($messages.offsetHeight, "$messages.scrollHeight");
+};
 socket.on("messageLocation", (message) => {
   console.log(message);
   const html = Mustache.render(locationMessageTemplate, {
     url: message.url,
+    username: message.username,
     createdAt: moment(message.createdAt).format("h:mm a"),
   });
   $messages.insertAdjacentHTML("beforeend", html);
 });
 
-$formMessage.addEventListener("submit", (e) => {
+const sendMessageEvent = (e) => {
   e.preventDefault();
 
   if (!$sendInput.value) return;
 
   $sendButton.setAttribute("disabled", "disabled");
-  $sendButton.style.backgroundColor = "#ccc";
+  $sendButton.style.backgroundColor = "#7c5cbf94";
 
   socket.emit("sendMessage", $sendInput.value);
-});
+};
+$formMessage.addEventListener("submit", sendMessageEvent);
+$sendButton.addEventListener("click", sendMessageEvent);
 
 let player = true;
 const add_child = (message) => {
@@ -74,7 +113,7 @@ const sendLocation = (ev) => {
   if (!navigator.geolocation) return alert("Geolocation not supported");
 
   $formButtonlocation.setAttribute("disabled", "disabled");
-  $formButtonlocation.style.backgroundColor = "#ccc";
+  // $formButtonlocation.style.backgroundColor = "#ccc";
 
   navigator.geolocation.getCurrentPosition((position) => {
     const myLocation = {
@@ -84,7 +123,7 @@ const sendLocation = (ev) => {
 
     socket.emit("sendLocation", myLocation, (message) => {
       $formButtonlocation.removeAttribute("disabled");
-      $formButtonlocation.style.backgroundColor = "black";
+      $formButtonlocation.style.backgroundColor = "#7c5cbf94";
 
       console.log(`location shared ${message}`);
     });
